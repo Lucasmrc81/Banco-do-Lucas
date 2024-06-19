@@ -1,36 +1,66 @@
+# Mrc81 Bank
 
----
+## Descrição do Projeto
 
-# Banco Mrc81
+O projeto "Mrc81 Bank" é um aplicativo bancário simulado que permite aos usuários realizar várias operações financeiras, como depósitos, saques, pagamentos de contas, transferências via Pix e gerenciamento de empréstimos. Ele é implementado em Node.js e simula um aplicativo de celular onde os usuários podem interagir através de um menu de opções no terminal.
 
-## O que o projeto faz
+## Funcionalidades
 
-O projeto "Banco Mrc81" é um sistema bancário simulado que permite aos usuários realizar várias operações financeiras, como depósitos, saques, pagamentos de contas, transferências via Pix e gerenciamento de contas. Ele é implementado em Java e simula um caixa eletrônico onde os usuários podem interagir através de um menu de opções.
+- **Depósito**: Permite ao usuário depositar um valor na conta.
+- **Saque**: Permite ao usuário sacar um valor da conta.
+- **Pagamento de Conta**: Permite ao usuário pagar contas via código de barras.
+- **Transferência via Pix**: Permite ao usuário realizar transferências utilizando QR code, chave Pix ou código de "copia e cola".
+- **Empréstimos**: Oferece diferentes opções de empréstimos como Pessoal, Consignado, Imobiliário e FGTS.
 
-## Por que o projeto é útil
+## Tecnologias Utilizadas
 
-Este projeto é útil para aqueles que desejam entender melhor o funcionamento de operações bancárias básicas e como implementar tais operações em Java. Ele é especialmente útil para estudantes e desenvolvedores iniciantes que querem praticar a programação orientada a objetos e a manipulação de arquivos em Java. Além disso, fornece uma base para a criação de um sistema bancário mais complexo.
+- **Node.js**: Plataforma utilizada para execução do código JavaScript no servidor.
+- **Readline**: Módulo do Node.js utilizado para ler dados de entrada do usuário via terminal.
+- **Módulos personalizados**: `enviarEmail`, `contrato`, `emprestimoImobiliario`, `emprestimoPessoal`, `emprestimoFGTS`, `emprestimoConsignado`.
 
-## Como os usuários podem começar a usar o projeto
+## Como Iniciar o Projeto
 
-Para começar a usar o projeto, siga estas etapas:
+### Pré-requisitos
 
-1. **Clone o Repositório**: Faça o download ou clone o repositório do projeto para o seu ambiente de desenvolvimento.
-2. **Compile o Código**: Compile os arquivos Java usando um compilador de sua escolha, como `javac`.
-3. **Execute o Programa**: Execute a classe principal `BancoMrc` para iniciar o sistema. Isso pode ser feito usando o comando `java BancoMrc` após a compilação.
-4. **Interaja com o Sistema**: Siga as instruções na tela para inserir seu cartão (simulado pelo pressionamento da tecla Enter), digitar a senha e escolher as operações desejadas no menu.
+- Node.js instalado
 
-## Onde os usuários podem obter ajuda com o projeto
+### Passos para iniciar
+
+1. **Clone o repositório**:
+    ```bash
+    git clone https://github.com/seuusuario/banco-mrc81.git
+    cd banco-mrc81
+    ```
+
+2. **Instale as dependências** (se houver):
+    ```bash
+    npm install
+    ```
+
+3. **Execute o programa**:
+    ```bash
+    node index.js
+    ```
+
+### Usando o Projeto
+
+- **Inicie o programa**: Ao iniciar o programa, uma mensagem de boas-vindas será exibida e o usuário será solicitado a inserir a senha.
+- **Navegue pelo menu**: Após inserir a senha correta, o usuário poderá escolher entre as opções disponíveis no menu para realizar diferentes operações bancárias.
+- **Deposite ou saque dinheiro**: Siga as instruções na tela para depositar ou sacar valores da conta.
+- **Pague contas**: Digite o valor e o código de barras para realizar pagamentos.
+- **Realize transferências via Pix**: Escolha entre QR code, chave Pix ou "copia e cola" para realizar transferências.
+- **Gerencie empréstimos**: Navegue pelas opções de empréstimos para escolher o tipo de empréstimo desejado.
+
+## Obter Ajuda
 
 Os usuários podem obter ajuda com o projeto das seguintes maneiras:
 
-1. **Documentação**: Consulte a documentação do código, se disponível, para entender a estrutura e o funcionamento das diferentes partes do sistema.
-2. **Comunidade de Desenvolvedores**: Participe de fóruns de desenvolvedores como Stack Overflow, GitHub, ou comunidades Java para discutir dúvidas e problemas específicos.
-3. **Tutoriais e Exemplos**: Procure tutoriais e exemplos de sistemas bancários em Java online, que podem fornecer insights adicionais e soluções para problemas comuns.
+- **Documentação do Código**: Consulte a documentação do código, se disponível, para entender a estrutura e o funcionamento das diferentes partes do sistema.
+- **Comunidade de Desenvolvedores**: Participe de fóruns de desenvolvedores como Stack Overflow, GitHub, ou comunidades de Node.js para discutir dúvidas e problemas específicos.
+- **Tutoriais e Exemplos**: Procure tutoriais e exemplos de sistemas bancários em Node.js online, que podem fornecer insights adicionais e soluções para problemas comuns.
 
-## Quem mantém e contribui com o projeto
+## Contribuições
 
-Este projeto é mantido e desenvolvido por Lucas Mrc81. As contribuições podem vir de diversos colaboradores que desejam aprimorar o sistema ou adaptá-lo para suas necessidades. Se você deseja contribuir, siga as diretrizes de contribuição, faça um fork do repositório e envie suas melhorias via pull requests.
+Este projeto é mantido e desenvolvido por Lucas Mrc81. As contribuições são bem-vindas de diversos colaboradores que desejam aprimorar o sistema ou adaptá-lo para suas necessidades. Se você deseja contribuir, siga as diretrizes de contribuição, faça um fork do repositório e envie suas melhorias via pull requests.
 
 ---
-
