@@ -1,5 +1,5 @@
 const readline = require("readline");
-const enviarEmail = require("./enviarEmail"); // Importa a função enviarEmail
+const enviarEmail = require("../controllers/enviarEmail"); // Importa a função enviarEmail
 const gerarContrato = require("./contrato"); // Importa a função gerarContrato do arquivo contrato.js
 
 function calcularTaxaJuros(prazoMeses) {
@@ -52,16 +52,16 @@ function gerarPin() {
 }
 
 function solicitarEmprestimo(valorEmprestimo, email, cpf, callback) {
-  const sucesso = Math.random() < 0.99; // Simulando sucesso aleatório (70% de chance)
+  const sucesso = Math.random() < 0.7; // Simulando sucesso aleatório (70% de chance)
   callback(sucesso);
 }
 
-function menuEmprestimos(rl, menuPrincipalCallback) {
+function menuEmprestimosImobiliario(rl, menuPrincipalCallback) {
   rl.question("Digite o valor do empréstimo: ", (valor) => {
     let valorEmprestimo = parseFloat(valor.replace(",", "."));
     if (isNaN(valorEmprestimo) || valorEmprestimo < 100) {
       console.log("Valor inválido. Tente novamente.");
-      menuEmprestimos(rl, menuPrincipalCallback); // Chamada recursiva correta
+      menuEmprestimosImobiliario(rl, menuPrincipalCallback); // Chamada recursiva correta
     } else {
       exibirTabelaCondicoes(valorEmprestimo);
       rl.question("Digite seu e-mail para envio do contrato: ", (email) => {
@@ -72,7 +72,7 @@ function menuEmprestimos(rl, menuPrincipalCallback) {
               let prazoEmprestimo = parseInt(prazo);
               if (![60, 120, 180].includes(prazoEmprestimo)) {
                 console.log("Prazo inválido. Tente novamente.");
-                menuEmprestimos(rl, menuPrincipalCallback); // Chamada recursiva correta
+                menuEmprestimosImobiliario(rl, menuPrincipalCallback); // Chamada recursiva correta
               } else {
                 rl.question(
                   "Escolha o melhor dia para pagamento (05, 08, 15, 16, 23, 29, 30): ",
@@ -82,7 +82,7 @@ function menuEmprestimos(rl, menuPrincipalCallback) {
                       console.log(
                         "Dia de vencimento inválido. Tente novamente."
                       );
-                      menuEmprestimos(rl, menuPrincipalCallback); // Chamada recursiva correta
+                      menuEmprestimosImobiliario(rl, menuPrincipalCallback); // Chamada recursiva correta
                     } else {
                       const taxaJuros = calcularTaxaJuros(prazoEmprestimo); // Taxa de juros variável
                       const tipoEmprestimo = "Imobiliário"; // Tipo de empréstimo
@@ -142,7 +142,10 @@ function menuEmprestimos(rl, menuPrincipalCallback) {
                                   console.log(
                                     "PIN incorreto. Tente novamente."
                                   );
-                                  menuEmprestimos(rl, menuPrincipalCallback);
+                                  menuEmprestimosImobiliario(
+                                    rl,
+                                    menuPrincipalCallback
+                                  );
                                 }
                               }
                             );
@@ -165,5 +168,5 @@ function menuEmprestimos(rl, menuPrincipalCallback) {
 }
 
 module.exports = {
-  menuEmprestimos,
+  menuEmprestimosImobiliario,
 };

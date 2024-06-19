@@ -1,5 +1,5 @@
 const readline = require("readline");
-const enviarEmail = require("./enviarEmail"); // Importa a função enviarEmail
+const enviarEmail = require("../controllers/enviarEmail"); // Importa a função enviarEmail
 const gerarContrato = require("./contrato"); // Importa a função gerarContrato do arquivo contrato.js
 
 function calcularTaxaJuros(prazoMeses) {

@@ -8,8 +8,6 @@ function gerarContrato(
   valorParcela,
   diaVencimento
 ) {
-  const logoURL = "https://app.logomaster.ai/pt/share/ZTb6GoFW"; // URL do logotipo
-
   const contrato = `
     Proposta de Empréstimo
 
