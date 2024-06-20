@@ -2,19 +2,23 @@ const fs = require("fs");
 const readline = require("readline");
 const { criarConta } = require("./controllers/criarConta");
 const { enviarEmail } = require("./controllers/enviarEmail");
-const { gerarContrato } = require("../contrato");
-const { menuEmprestimosImobiliario } = require("../emprestimoImobiliario");
-const { menuEmprestimsoConsignado } = require("../emprestimoConsignado");
-const { menuEmprestimosFGTS } = require("../emprestimoFGTS");
-const { menuEmprestimosPessoal } = require("../emprestimoPessoal");
-const { gerarPIN, obterPIN } = require("./controllers/pinManager");
+const { gerarContrato } = require("./controllers/contrato");
+const {} = require("./controllers/mensagemBoasVindas");
 const {
-  definirSenha,
-  verificarSenhaCompleta,
-  verificarPrimeirosDigitos,
-} = require("./controllers/senhaManager");
-const trocarSenha = require("./controllers/trocaDeSenha");
-const realizarPix = require("./controllers/pix");
+  realizarOperacaoFinanceira,
+} = require("./controllers/operacoesFinanceiras");
+const {
+  menuEmprestimosImobiliario,
+} = require("./emprestimo/emprestimoImobiliario");
+const {
+  menuEmprestimosConsignado,
+} = require("./emprestimo/emprestimoConsignado");
+const { menuEmprestimosFGTS } = require("./emprestimo/emprestimoFGTS");
+const { menuEmprestimosPessoal } = require("./emprestimo/emprestimoPessoal");
+const { verificarPrimeirosDigitos } = require("./seguranca/senhaManager");
+const { obterPIN } = require("./seguranca/pinManager");
+const trocarSenha = require("./seguranca/trocarDeSenha");
+const realizarPix = require("./pix/pix");
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -30,19 +34,17 @@ fs.readFile("data/clientes.json", "utf8", (err, data) => {
     return;
   }
   clientes = JSON.parse(data);
-  exibirMensagemBoasVindas();
 });
 
 function gerarSaldoAleatorio() {
   return (Math.random() * 10000).toFixed(2);
 }
 
-function exibirMensagemBoasVindas() {
-  console.log("\nBem-vindo ao Banco Mrc81!");
-  exibirMensagemInicial();
+function exibirMensagemBoasVindasConsole() {
+  console.log("nBem-vindo ao Mrc81 Bank !");
 }
 
-function exibirMensagemInicial() {
+function exibirMenuInicial() {
   console.log("\n1: Fazer Login");
   console.log("2: Criar Conta");
   rl.question("\nEscolha uma opção: ", (opcao) => {
@@ -51,11 +53,11 @@ function exibirMensagemInicial() {
         pedirCPF();
         break;
       case 2:
-        criarConta(clientes, exibirMensagemInicial);
+        criarConta(clientes, exibirMenuInicial);
         break;
       default:
         console.log("\nOpção inválida. Tente novamente.");
-        exibirMensagemInicial();
+        exibirMenuInicial();
         break;
     }
   });
@@ -67,14 +69,14 @@ function pedirCPF() {
       const cliente = clientes.find((cliente) => cliente.cpf === inputCPF);
       if (cliente) {
         console.log("CPF válido.");
-        pedirSenha(cliente, menu);
+        pedirSenha(cliente, exibirMenuCliente);
       } else {
         console.log("CPF não encontrado. Tente novamente.");
-        pedirCPF();
+        pedirCPF(); // Chamada recursiva aqui pode ser o problema se não controlada
       }
     } else {
       console.log("CPF inválido. Tente novamente.");
-      pedirCPF();
+      pedirCPF(); // Outra chamada recursiva aqui também pode ser problemática
     }
   });
 }
@@ -86,40 +88,18 @@ function pedirSenha(cliente, callback) {
       callback(cliente);
     } else {
       console.log("Senha incorreta. Acesso negado.");
-      rl.close();
+      exibirMenuInicial(); // Voltar ao menu inicial após senha incorreta
     }
   });
 }
 
-function contagemRegressiva(segundos, callback) {
-  console.log(`\nAguarde ${segundos} segundos...`);
-  let intervalo = setInterval(() => {
-    segundos--;
-    if (segundos === 0) {
-      clearInterval(intervalo);
-      callback();
-    } else {
-      console.log(`${segundos}...`);
-    }
-  }, 1000);
-}
-
-function gerarCodigoDeBarras() {
-  const codigo = Math.floor(1000000000000 + Math.random() * 9000000000000);
-  return codigo.toString();
-}
-
-function extrairUltimosTresDigitos(codigoBarras) {
-  if (codigoBarras.length >= 3) {
-    return codigoBarras.slice(-3);
-  } else {
-    return null;
-  }
+function exibirMenuCliente(cliente) {
+  console.log(`\nBem-vindo, ${cliente.nome}`);
+  console.log(`Seu saldo é de R$ ${cliente.saldo}`);
+  menu(cliente);
 }
 
 function menu(cliente) {
-  console.log(`\nBem-vindo, ${cliente.nome}`);
-  console.log(`Seu saldo é de R$ ${cliente.saldo}`);
   console.log("\nEscolha uma opção:");
   console.log("1: Saldo");
   console.log("2: Extrato");
@@ -141,26 +121,7 @@ function menu(cliente) {
         menu(cliente);
         break;
       case 3:
-        rl.question("Digite o valor a ser sacado: ", (valor) => {
-          let valorSacado = parseFloat(valor);
-          if (isNaN(valorSacado) || valorSacado <= 0) {
-            console.log("Valor inválido.");
-            menu(cliente);
-            return;
-          }
-          if (valorSacado > cliente.saldo) {
-            console.log("Saldo insuficiente para realizar o saque.");
-            menu(cliente);
-            return;
-          }
-          contagemRegressiva(3, () => {
-            cliente.saldo = (parseFloat(cliente.saldo) - valorSacado).toFixed(
-              2
-            );
-            console.log("Valor sacado com sucesso!");
-            menu(cliente);
-          });
-        });
+        realizarSaque(cliente);
         break;
       case 4:
         console.log("Em desenvolvimento");
@@ -189,6 +150,25 @@ function menu(cliente) {
   });
 }
 
+function realizarSaque(cliente) {
+  rl.question("Digite o valor a ser sacado: ", (valor) => {
+    let valorSacado = parseFloat(valor);
+    if (isNaN(valorSacado) || valorSacado <= 0) {
+      console.log("Valor inválido.");
+      menu(cliente);
+      return;
+    }
+    if (valorSacado > cliente.saldo) {
+      console.log("Saldo insuficiente para realizar o saque.");
+      menu(cliente);
+      return;
+    }
+    cliente.saldo = (parseFloat(cliente.saldo) - valorSacado).toFixed(2);
+    console.log("Valor sacado com sucesso!");
+    menu(cliente);
+  });
+}
+
 function pagarConta(cliente) {
   rl.question("Pressione Enter para ler o código de barras:", () => {
     let codigo = gerarCodigoDeBarras();
@@ -204,7 +184,7 @@ function pagarConta(cliente) {
       "\n1: Confirmar pagamento\n2: Valor incorreto\nEscolha uma opção: ",
       (confirmacao) => {
         if (confirmacao === "1") {
-          pedirSenha(cliente, rl, () => {
+          pedirSenha(cliente, () => {
             if (valorPagamento <= cliente.saldo) {
               cliente.saldo = (
                 parseFloat(cliente.saldo) - valorPagamento
@@ -236,7 +216,7 @@ function menuOutros(cliente) {
         menuEmprestimosPessoal(rl, () => menu(cliente));
         break;
       case 2:
-        menuEmprestimsoConsignado(rl, () => menu(cliente));
+        menuEmprestimosConsignado(rl, () => menu(cliente));
         break;
       case 3:
         menuEmprestimosImobiliario(rl, () => menu(cliente));
@@ -249,7 +229,7 @@ function menuOutros(cliente) {
         break;
       default:
         console.log("Opção inválida.");
-        menu(cliente);
+        menuOutros(cliente);
         break;
     }
   });
@@ -257,15 +237,22 @@ function menuOutros(cliente) {
 
 function solicitarNovaSenha(cliente) {
   rl.question("Digite a nova senha: ", (novaSenha) => {
-    trocarSenha(clientes, cliente.cpf, novaSenha);
+    definirSenha(cliente, novaSenha);
+    console.log("Senha alterada com sucesso.");
     menu(cliente);
   });
 }
 
 function encerrarPrograma() {
-  console.log("\nEncerrando o programa...");
+  console.log("Obrigado por usar o Mrc81 Bank. Até a próxima!");
   rl.close();
-  process.exit(0);
 }
 
-exibirMensagemBoasVindas();
+// Iniciar o programa
+function iniciarPrograma() {
+  exibirMensagemBoasVindasConsole();
+  exibirMenuInicial();
+}
+
+// Função principal de execução
+iniciarPrograma();

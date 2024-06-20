@@ -1,6 +1,6 @@
 const readline = require("readline");
 const enviarEmail = require("../controllers/enviarEmail"); // Importa a função enviarEmail
-const gerarContrato = require("./contrato"); // Importa a função gerarContrato do arquivo contrato.js
+const { gerarContrato } = require("../controllers/contrato"); // Importa a função gerarContrato do arquivo contrato.js
 
 function exibirTabelaCondicoes() {
   const valoresPredefinidos = [1000, 5000, 10000];

@@ -1,6 +1,5 @@
-const { verificarPrimeirosDigitos } = require("./senhaManager");
-const { obterPIN } = require("./pinManager");
-
+const { verificarPrimeirosDigitos } = require("../seguranca/senhaManager");
+const { obterPIN } = require("../seguranca/pinManager");
 function realizarOperacaoFinanceira(tipoOperacao, inputSenha, destinatario) {
   let validacaoSenha = false;
 

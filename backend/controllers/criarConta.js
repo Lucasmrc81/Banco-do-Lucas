@@ -3,7 +3,7 @@ const readline = require("readline");
 const axios = require("axios");
 const { enviarEmail } = require("./enviarEmail");
 const { gerarMensagemBoasVindas } = require("./mensagemBoasVindas");
-const { gerarPIN, salvarPIN, lerPIN } = require("../segurança/pinManager");
+const { gerarPIN, salvarPIN, lerPIN } = require("../seguranca/pinManager");
 
 const rl = readline.createInterface({
   input: process.stdin,

@@ -1,6 +1,6 @@
 const { gerarCodigoDeBarras } = require("../utils");
-const { pedirSenha } = require("../senhaManager");
-const { enviarEmail } = require("../enviarEmail");
+const senhaManager = require("../seguranca/senhaManager");
+const { enviarEmail } = require("../controllers/enviarEmail");
 
 function pixQRCode(cliente, rl, menu) {
   let codigoQR = gerarCodigoDeBarras();

@@ -1,5 +1,6 @@
-const { pedirSenha } = require("../senhaManager");
-
+const { gerarCodigoDeBarras } = require("../utils");
+const senhaManager = require("../seguranca/senhaManager");
+const { enviarEmail } = require("../controllers/enviarEmail");
 function pixCopiaCola(cliente, rl, menu) {
   rl.question(
     "Digite o código de Copia e Cola para transferência: ",
